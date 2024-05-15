@@ -1,0 +1,80 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+{% if request.user.is_authenticated and request.user.is_superuser %}
+    <h1> Faltas </h1>
+    <br/>
+    <br/>
+
+    {% for item in faltas %}
+    <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal{{ item.ID_Falta  }}">
+      {% for j in horarios %}
+       {% for z in alunos %}
+         {% if item.ID_Aluno == z %}
+            {% if item.ID_Horario == j %}
+              &nbsp;&nbsp;&nbsp;&nbsp;{{ j.Disciplina }} - {{ z.Nome }}
+            {% endif %} 
+         {% endif %}  
+       {% endfor %} 
+      {% endfor %} 
+    </button>
+    
+    <!-- PopUp -->
+    <div id="myModal{{ item.ID_Falta }}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        {% for j in horarios %}
+                          {% for z in alunos %}
+                            {% if item.ID_Aluno == z %}
+                              {% if item.ID_Horario == j %}
+                                &nbsp;&nbsp;&nbsp;&nbsp;{{ j.Disciplina }} - {{ z.Nome }}
+                              {% endif %} 
+                            {% endif %}  
+                          {% endfor %} 
+                        {% endfor %}             
+                    </h4>
+                </div>
+                <div class="modal-body">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-sm">
+                        <!--Numero de Alunos: {{ item.Numero_Alunos }} <br><br>-->
+                      </div>
+                    </div>
+                  </div>                    
+                   <!--{% for al in aluno %}                      
+                        {% if item.ID_Turma == al.ID_Turma %}
+                            <div class="container">
+                              <div class="row">
+                                <div class="col-sm">
+                                  {{ al.Numero_Turma }}: {{ al.Nome }}
+                                </div>
+                                <div class="col-sm d-flex justify-content-end">
+                                  <a href="{% url 'delete_aluno' al.ID_Aluno %}"><button type="button" class="btn btn-outline-primary btn-sm">X</button></a>
+                                </div>
+                              </div>
+                            </div>
+                            <!-<hr style="border: 3px solid black; border-radius: 2px;">     
+                        {% endif %}
+                    {% endfor %}--> 
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+        
+    {% include "includes/footer.html" %}
+    {% else %}
+    <h1>Faça o Login!</h1>
+    {% endif %}
+
+{% endblock %}

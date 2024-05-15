@@ -1,0 +1,144 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+{% if request.user.is_authenticated and request.user.is_superuser %}
+  <div class="container">
+    <h1>Professores</h1> <br>
+    
+    {% for message in messages %}
+      <p id="message">{{message}}</p>
+    {% endfor %}
+    
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body p-3">
+            <div class="row">
+              <div class="col-sm">
+                <div class="numbers">
+                  <p class="font-weight-bolder mb-0">
+                    Sempre que é adicionado novo professor, automaticamente cria-se uma conta de utilizador para o mesmo professor. 
+                    A palavra-pass é definida pelo administrador.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <button type="button" class="btn btn-info btn" data-toggle="modal" data-target="#add">Adicionar Professor</button>
+    <button type="button" class="btn btn-light btn" data-toggle="modal" data-target="#delete_curso">Remover Professor</button> <br><br>
+
+    {% for item in professores %}
+    <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal{{ item.ID_Professor }}">{{ item.Nome }}</button>
+    
+    <!-- PopUp -->
+    <div id="myModal{{ item.ID_Professor }}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        &nbsp;&nbsp;&nbsp;&nbsp;{{ item.Nome }}                
+                    </h4>
+                </div>
+                <div class="modal-body">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-sm">
+                        <strong>Informações da conta</strong><br>
+
+                        {% for i in prof_conta_info %}
+                          {% if i.0 == item.ID_Professor %}
+                            Username: {{ i.1 }} <br>
+                            Email: {{ i.2 }}
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>                 
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+   
+    {% include "includes/footer.html" %}
+    
+
+  </div>
+    <!-- PopUp Adicionar Professor-->
+    <div id="add" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Conteudo-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                Adicionar Professor
+              </h4>
+            </div>
+            <div class="modal-body"> 
+                <form method="POST" action="{% url 'professor' %}">
+                    {% csrf_token %}
+                        <div class="form-group">    
+                            <input type="text" class="form-control" placeholder="Nome" name="Nome">
+                        </div>
+                        <p style="font-weight: bolder;">Credencias da conta do Professor</p>
+                        {% for field in form %}
+                          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                          <div class="md-3" >
+                            {{field}}
+                          </div>
+                        {% endfor %}
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Adicionar</button>     </form>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- PopUp Remover Professor -->
+    <div id="delete_curso" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Conteudo-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                Remover Professor
+              </h4>
+            </div>
+            <div class="modal-body"> 
+              <div class="form-group">
+                  <form method="POST" action="{% url 'delete_professor' %}">
+                    {% csrf_token %}   
+                    <div class="form-group">
+                        <select name="ID_Turma_FK" id="ID_Turma_FK">
+                          {% for key, value in professor_join.items %}
+                            <option value="{{ key }}">{{ value }}</option>
+                          {% endfor %}
+                        </select>           
+                    </div>         
+            </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Eliminar</button></form>  
+              <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    {% else %}
+    <h1>Faça o Login!</h1>
+    {% endif %}
+{% endblock %}

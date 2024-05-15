@@ -1,0 +1,214 @@
+{% load i18n static admin_soft %}
+
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main" style="z-index: 1030;">
+  <div class="sidenav-header">
+    <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+    <a class="navbar-brand m-0" href="{% url 'bd' %}">
+      <img src="{% static 'img/logopap.png' %}" class="navbar-brand-img h-100" alt="main_logo"> <!--Logo-->
+      <span class="ms-1 font-weight-bold">SmartNet</span>
+    </a>
+  </div>
+  <hr class="horizontal dark mt-0">
+  <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <ul class="navbar-nav">
+
+      {% admin_get_menu as app_list %}
+      {% if app_list %}
+          {% for app in app_list %}
+              {% if app.has_perms and not app.pinned %}
+                
+              {% endif %}
+          {% endfor %}
+      {% endif %}
+
+      {% if request.user.is_authenticated and request.user.is_superuser %}
+      <li class="nav-item">
+
+        <a href="{% url 'face_recognition' %}" class="nav-link {% if 'face_recognition' in segment %} active {% endif %}">
+
+          <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-bounding-box" viewBox="0 0 16 16">
+              <title>shop </title>
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g transform="translate(-1716.000000, -439.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                  <g transform="translate(1716.000000, 291.000000)">
+                    <g transform="translate(0.000000, 148.000000)">
+                      <path class="color-background opacity-6" d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5M.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5"/>
+                      <path class="color-background" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <span class="nav-link-text ms-1">{% trans 'Reconhecimento Facial' %}</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'professor' %}" class="nav-link {% if 'aluno' in segment %} active {% endif %}">
+
+
+          <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+              <title>shop </title>
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g transform="translate(-1716.000000, -439.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                  <g transform="translate(1716.000000, 291.000000)">
+                    <g transform="translate(0.000000, 148.000000)">
+                      <path class="color-background" d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <span class="nav-link-text ms-1">{% trans 'Professores' %}</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'turma' %}" class="nav-link {% if 'turma' in segment %} active {% endif %}">
+
+
+          <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+              <title>shop</title>
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g transform="translate(-1716.000000, -439.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                  <g transform="translate(1716.000000, 291.000000)">
+                    <g transform="translate(0.000000, 148.000000)">
+                      <path class="color-background opacity-6" d="M4.04 7.43a4 4 0 0 1 7.92 0 .5.5 0 1 1-.99.14 3 3 0 0 0-5.94 0 .5.5 0 1 1-.99-.14M4 9.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zm1 .5v3h6v-3h-1v.5a.5.5 0 0 1-1 0V10z"/>
+                      <path class="color-background" d="M6 2.341V2a2 2 0 1 1 4 0v.341c2.33.824 4 3.047 4 5.659v5.5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5V8a6 6 0 0 1 4-5.659M7 2v.083a6 6 0 0 1 2 0V2a1 1 0 0 0-2 0m1 1a5 5 0 0 0-5 5v5.5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5V8a5 5 0 0 0-5-5"/>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <span class="nav-link-text ms-1">{% trans 'Turmas' %}</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'sala' %}" class="nav-link {% if 'sala' in segment %} active {% endif %}">
+
+
+          <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-collection" viewBox="0 0 16 16">
+              <title>shop </title>
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g transform="translate(-1716.000000, -439.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                  <g transform="translate(1716.000000, 291.000000)">
+                    <g transform="translate(0.000000, 148.000000)">
+                      <path class="color-background" d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5z"/>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <span class="nav-link-text ms-1">{% trans 'Salas' %}</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'curso' %}" class="nav-link {% if 'curso' in segment %} active {% endif %}">
+
+          <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">              <title>shop </title>
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g transform="translate(-1716.000000, -439.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                  <g transform="translate(1716.000000, 291.000000)">
+                    <g transform="translate(0.000000, 148.000000)">
+                      <path class="color-background" d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <span class="nav-link-text ms-1">{% trans 'Cursos' %}</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'horario' %}" class="nav-link {% if 'horario' in segment %} active {% endif %}">
+
+          <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+              <title>shop</title>
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g transform="translate(-1716.000000, -439.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                  <g transform="translate(1716.000000, 291.000000)">
+                    <g transform="translate(0.000000, 148.000000)">
+                      <path class="color-background opacity-6" d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+                      <path class="color-background" d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <span class="nav-link-text ms-1">{% trans 'Horario' %}</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+
+        <a href="{% url 'tipo_de_horario' %}" class="nav-link {% if 'tipo_de_horario' in segment %} active {% endif %}">
+  
+  
+          <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-calendar-week" viewBox="0 0 16 16">
+              <title>shop </title>
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g transform="translate(-1716.000000, -439.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                  <g transform="translate(1716.000000, 291.000000)">
+                    <g transform="translate(0.000000, 148.000000)">
+                      <path class="color-background" d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <span class="nav-link-text ms-1">{% trans 'Tipo de Horário' %}</span>
+        </a>
+      </li>
+      
+    </ul>
+    </div>
+    <!--<div class="sidenav-footer mx-3 mt-9">
+      <a target="_blank"
+        class="btn bg-gradient-primary mt-3 w-100" 
+        href="https://appseed.us/support/">Apoio ao cliente</a>
+    </div> -->
+    
+    
+    {% elif request.user.is_authenticated and not request.user.is_superuser %}  
+    <li class="nav-item">
+
+      <a href="{% url 'timetable' %}" class="nav-link {% if 'timetable' in segment %} active {% endif %}">
+
+
+        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-calendar-week" viewBox="0 0 16 16">
+            <title>shop </title>
+            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g transform="translate(-1716.000000, -439.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                <g transform="translate(1716.000000, 291.000000)">
+                  <g transform="translate(0.000000, 148.000000)">
+                    <path class="color-background opacity-6" d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+                    <path class="color-background" d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <span class="nav-link-text ms-1">{% trans 'Horario' %}</span>
+      </a>
+    </li>
+
+    {% endif %}
+
+</aside>

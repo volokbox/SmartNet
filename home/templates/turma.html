@@ -1,0 +1,201 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+{% if request.user.is_authenticated and request.user.is_superuser %}
+  <div class="container">
+    <h1> Turmas </h1> <br>
+    
+    {% for message in messages %}
+      <p id="message">{{message}}</p>
+    {% endfor %} 
+
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="card">
+          <div class="card-body p-3">
+            <div class="row">
+              <div class="col-sm">
+                <div class="numbers">
+                  <p class="font-weight-bolder mb-0">
+                    Ao adicionar uma turma nova, é possível inserir novos alunos. <br>
+                    Quando um novo aluno é inserido na turma, automaticamente irá abrir uma janela
+                    para tirar fotografias da cara do aluno. O processo de captura de fotografias é 
+                    executado uma única vez para cada novo aluno.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <br>
+
+    <button type="button" class="btn btn-info btn" data-toggle="modal" data-target="#add">Adicionar Turma</button>
+    <button type="button" class="btn btn-light btn" data-toggle="modal" data-target="#delete_turma">Remover Turma</button> <br><br>
+
+
+    {% for item in turma %}
+    <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal{{ item.ID_Turma }}">{{ item.Nome }}</button>
+    
+    <!-- PopUp -->
+    <div id="myModal{{ item.ID_Turma }}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        &nbsp;&nbsp;&nbsp;&nbsp;{{ item.Nome }}                
+                    </h4>
+                </div>
+                <div class="modal-body">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-sm">
+                        Numero de Alunos: {{ item.Numero_Alunos }} <br><br>
+                      </div>
+                    </div>
+                  </div>                    
+                    {% for al in aluno %}                      
+                        {% if item.ID_Turma == al.ID_Turma %}
+                            <div class="container">
+                              <div class="row">
+                                <div class="col-sm">
+                                  {{ al.Numero_Turma }}: {{ al.Nome }}
+                                </div>
+                                <div class="col-sm d-flex justify-content-end">
+                                  <a href="{% url 'delete_aluno' al.ID_Aluno %}"><button type="button" class="btn btn-outline-primary btn-sm">X</button></a>
+                                </div>
+                              </div>
+                            </div>
+                            <!--<hr style="border: 3px solid black; border-radius: 2px;"> -->     
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_aluno">Adicionar Aluno</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% include "includes/footer.html" %}
+  </div>
+
+    <!-- PopUp Adicionar Turma-->
+    <div id="add" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Conteudo-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              Adicionar Turma
+            </h4>
+          </div>
+          <div class="modal-body"> 
+            <form method="POST" action="{% url 'turma' %}">
+              {% csrf_token %}                
+              <div class="form-group">          
+                <input type="text" pattern="[A-Za-zÀ-ÿ0-9\s]{3,}" class="form-control"  aria-describedby="emailHelp"
+                placeholder="Nome" name="Nome" value="{{ Nome }}">   
+                <small class="form-text text-muted">Por favor, insira mais de 3 letras e apenas letras e números.</small>
+         
+              </div>
+              <div class="form-group">    
+                <select name="ID_Curso" id="ID_Curso">
+                  {% for key, value in curso_join.items %}
+                    <option value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select> 
+                <br/>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Adicionar</button>     </form>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PopUp Adicionar Aluno -->
+    <div id="add_aluno" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Conteudo-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              Adicionar Aluno
+            </h4>
+          </div>
+          <div class="modal-body"> 
+            <form method="POST" action="{% url 'aluno' %}">
+              {% csrf_token %}   
+              
+              <div class="form-group">
+                  <select name="ID_Turma_FK" id="ID_Turma_FK">
+                      {% for key, value in turma_join.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                      {% endfor %}
+                  </select>           
+              </div>
+              
+              <div class="form-group">          
+                  <input type="text" class="form-control"  aria-describedby="emailHelp"
+                  placeholder="Nome" name="Nome" value="{{ Nome }}">            
+              </div>
+
+              <div class="form-group">          
+                <input type="text" class="form-control"  aria-describedby="emailHelp"
+                placeholder="Número na Turma" name="Numero_Turma" value="{{ Numero_Turma }}">            
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Adicionar</button>     </form>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PopUp Remover Turma -->
+    <div id="delete_turma" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Conteudo-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              Remover Turma
+            </h4>
+          </div>
+          <div class="modal-body"> 
+            <div class="form-group">
+                <form method="POST" action="{% url 'delete_turma' %}">
+                  {% csrf_token %}   
+                  <div class="form-group">
+                      <select name="ID_Turma_FK" id="ID_Turma_FK">
+                          {% for key, value in turma_join.items %}
+                          <option value="{{ key }}">{{ value }}</option>
+                          {% endfor %}
+                      </select>           
+                  </div>         
+          </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Eliminar</button></form>  
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    {% else %}
+    <h1>Faça o Login!</h1>
+    {% endif %}
+
+{% endblock %}

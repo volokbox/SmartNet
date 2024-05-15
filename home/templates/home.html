@@ -1,0 +1,72 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}    
+    {% if request.user.is_authenticated and request.user.is_superuser %}
+    <div class="container">
+        {% for item in escola %}    
+            <h2>{{ item.Nome }}<br> </h2>
+        {% endfor %} <br> 
+        
+        <div class="row">
+            <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body p-3">
+                <div class="row">
+                    <div class="col-sm">
+                    <div class="numbers">
+                        <h3>Professores</h3><br>
+                        {% for item in professores %}
+                            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal{{ item.ID_Turma }}">{{ item.Nome }}</button>
+                        {% endfor %}
+                        
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                    <div class="col-sm">
+                        <div class="numbers">
+                            <h3>Turmas</h3><br>
+                            {% for item in turmas %}
+                                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal{{ item.ID_Turma }}">{{ item.Nome }}</button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div> <br>
+        <div class="col-sm-6">
+            <div class="card">
+            <div class="card-body p-3">
+                <div class="row">
+                <div class="col-sm">
+                    <div class="numbers">
+                        <h3>Cursos</h3><br>
+                        {% for item in cursos %}
+                            <button type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#myModal{{ item.ID_Turma }}">{{ item.Nome }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+        
+        {% include "includes/footer.html" %}
+
+
+        {% else %}
+        <h1>Faça o Login!</h1>
+        {% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+    {% if request.user.is_authenticated and not request.user.is_superuser %}
+    <h1> Insira um aluno </h1>
+    <br/>
+    <br/>
+        <form method="POST" action="{% url 'aluno' %}">
+        {% csrf_token %}   
+        
+        <div class="form-group">
+            <select name="ID_Turma_FK" id="ID_Turma_FK">
+                {% for key, value in turma_join.items %}
+                <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+            </select>           
+        </div>
+        
+        <div class="form-group">          
+            <input type="text" class="form-control"  aria-describedby="emailHelp"
+            placeholder="Nome" name="Nome" value="{{ Nome }}">            
+        </div>
+        
+        <br/>
+        <button type="submit" class="btn btn-primary">Inserir</button>
+        </div>
+    </form>
+    {% include "includes/footer.html" %}
+    {% else %}
+    <h1>Faça o Login!</h1>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'layouts/base.html' %} <!-- Estende o layout base -->
+
+{% load static %} <!-- Carrega arquivos estáticos -->
+
+{% block content %} <!-- Define o bloco de conteúdo -->
+
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"> <!-- Inclui o arquivo de estilo CSS -->
+</head>
+<body>
+{% if request.user.is_authenticated %}
+<div class="container">
+<h2>Horário</h2> <!-- Título da página -->
+
+<div class="row">
+  <div class="col-sm-8">
+    <div class="card">
+      <div class="card-body p-3">
+        <div class="row">
+          <div class="col-sm">
+            <div class="numbers">
+              <p class="font-weight-bolder mb-0">
+                Para visualizar as faltas dos alunos, escolha a aula pretendida do seu horário. <br>
+                Alunos marcados à vermelho - estão a faltar. <br>
+                Alunos marcados à azul - estão presentes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> <br>
+<table>
+  <tr>
+    <th>Hora / Dia</th> <!-- Cabeçalho da coluna para o tempo -->
+    {% for time_slot in time_slots %}
+      <th>{{ time_slot }}</th> <!-- Coluna para os intervalos de tempo -->
+    {% endfor %}
+  </tr>
+
+  {% for day, schedule in horario_data.items %}
+    <tr>
+      <th>{{ day }}</th> <!-- Cabeçalho da linha para o dia da semana -->
+      
+      {% for time_slot in time_slots %}
+        <td style="text-align: center;">
+          {% for entry in schedule %}
+            {% with start_time=time_slot|slice:"0:5" %} <!-- Extrai o horário de início do intervalo de tempo -->
+              {% with end_time=time_slot|slice:"8:13" %} <!-- Extrai o horário de término do intervalo de tempo -->
+                {% if entry.0 >= start_time and entry.0 < end_time %} <!-- Verifica se o horário da entrada está dentro do intervalo de tempo -->
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal{{ day }}_{{ entry.1|slugify }}_{{ forloop.counter }}">{{ entry.2 }}</button>
+                  <!-- Modal for the entry -->
+                  <div id="myModal{{ day }}_{{ entry.1|slugify }}_{{ forloop.counter }}" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title">
+                            {{ entry.2 }} - {{ entry.5 }}
+                          </h4>
+                        </div>
+                        <div class="modal-body" style="text-align: left;">                      
+                          {% for i in entry.7 %}
+                            {% if i in entry.6 %}
+                              <button type="button" class="btn btn-danger">{{ i }}</button><br>
+                            {% else %}
+                              <button type="button" class="btn btn-info">{{ i }}</button><br>
+                            {% endif %}                          
+                          {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endwith %}
+            {% endwith %}
+          {% empty %}
+            &nbsp; <!-- Espaço reservado se nenhuma aula estiver agendada -->
+          {% endfor %}
+        </td>
+      {% endfor %}  
+    </tr>
+  {% endfor %}
+</table>
+{% include "includes/footer.html" %}
+</div>
+{% else %}
+<h1>Faça o Login!</h1>
+{% endif %}
+</body>
+</html>
+
+{% endblock %} <!-- Fim do bloco de conteúdo -->

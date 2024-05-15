@@ -1,0 +1,80 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+{% if request.user.is_authenticated and request.user.is_superuser %}
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+    <h1>Reconhecimento Facial</h1>
+    <br>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body p-3">
+            <div class="row">
+              <div class="col-sm">
+                <div class="numbers">
+                  <p class="font-weight-bolder mb-0">
+                    Para recorrer à funcionalidade de reconhecimento facial, escolha a sala onde a aula está decorrer.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <form method="POST" action="{% url 'face_recognition' %}" id="salaForm">
+        {% csrf_token %}   
+        <div class="form-group" style="width: 48%;">
+            <select name="ID_Sala" id="ID_Sala">
+                {% for key, value in sala_join.items %}
+                <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+            </select>           
+        </div>
+        <br/>
+        <button type="submit" class="btn btn-primary">Inserir</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        // Define the URL for AJAX request
+        var ajaxUrl = "{% url 'face_recognition' %}";
+
+        $(document).ready(function() {
+            $('#salaForm').submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                var selectedOption = $('#ID_Sala').val(); // Get selected option value
+
+                // Make AJAX request to trigger facial recognition
+                $.ajax({
+                    type: 'POST',
+                    url: ajaxUrl,    
+                    data: {
+                        'selected_option': selectedOption
+                    },
+                    success: function(response) {
+                        $('#result').html(response); // Display response
+                    }
+                });
+            });
+        });
+
+        
+    </script>
+
+    {% include "includes/footer.html" %}   
+    </div>
+    {% else %}
+    <h1>Faça o Login!</h1>
+    {% endif %}
+</body>
+</html>
+{% endblock %}

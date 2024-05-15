@@ -1,0 +1,103 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+{% if request.user.is_authenticated and request.user.is_superuser %}
+  <div class="container">
+    
+    <h1> Salas </h1> 
+    {% for message in messages %}
+      <p id="message">{{message}}</p>
+    {% endfor %} <br>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body p-3">
+            <div class="row">
+              <div class="col-sm">
+                <div class="numbers">
+                  <p class="font-weight-bolder mb-0">
+                    A inserção da sala é necessária para o uso futuro do reconhecimento facial.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <button type="button" class="btn btn-info btn" data-toggle="modal" data-target="#add">Adicionar Sala</button>
+    <button type="button" class="btn btn-light btn" data-toggle="modal" data-target="#delete_sala">Remover Sala</button> <br><br>
+
+    {% for item in sala %}
+    <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal{{ item.ID_Sala }}">{{ item.Nome_Sala }}</button>
+    {% endfor %}
+    {% include "includes/footer.html" %}
+    
+  </div>
+
+    <!-- PopUp Adicionar Sala-->
+    <div id="add" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Conteudo-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                Adicionar Sala
+              </h4>
+            </div>
+            <div class="modal-body"> 
+                <form method="POST" action="{% url 'sala' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Nome da Sala" name="Nome_Sala">
+                    </div> <br>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Adicionar</button>     </form>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- PopUp Remover Sala -->
+    <div id="delete_sala" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Conteudo-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                Remover Sala
+              </h4>
+            </div>
+            <div class="modal-body"> 
+              <div class="form-group">
+                  <form method="POST" action="{% url 'delete_sala' %}">
+                    {% csrf_token %}   
+                    <div class="form-group">
+                        <select name="ID_Sala_FK" id="ID_Sala_FK">
+                          {% for key, value in sala_join.items %}
+                            <option value="{{ key }}">{{ value }}</option>
+                          {% endfor %}
+                        </select>           
+                    </div>         
+            </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Eliminar</button></form>  
+              <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+    
+    {% else %}
+    <h1>Faça o Login!</h1>
+    {% endif %}
+
+{% endblock %}
