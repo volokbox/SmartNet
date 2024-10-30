@@ -1,18 +1,30 @@
-FROM python:3.9
+# Base image
+FROM python:3.9-slim
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
+# Create and set the working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
 COPY requirements.txt .
-# install python dependencies
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
+# Copy project files
 COPY . .
 
-# running migrations
-RUN python manage.py migrate
+# Collect static files and run migrations
+RUN python manage.py collectstatic --no-input
 
-# gunicorn
-CMD ["gunicorn", "--config", "gunicorn-cfg.py", "core.wsgi"]
+# Command to run the application
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
